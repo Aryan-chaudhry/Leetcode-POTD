@@ -1,24 +1,19 @@
 class Solution {
 public:
-    void solve(vector<int>&nums, int index, int &target, int &count, int sum){
-        if(index >= nums.size()){
-            if(sum == target){
-                count++;
-            }
-            return;
-        }
+   int Recursion(vector<int>&nums, int index, int target){
+    // base case
+    if(index >= nums.size()){
+        return target==0 ? 1 : 0;
+    }
 
-        sum += nums[index];
-        solve(nums, index+1, target, count, sum);
-        sum -= nums[index];
-        sum += nums[index]*-1;
-        solve(nums, index+1, target, count, sum);
+    int plus = Recursion(nums, index+1, target+nums[index]);
+    int minus = Recursion(nums, index+1, target-nums[index]);
+    return plus + minus;
 
     }
+
     int findTargetSumWays(vector<int>& nums, int target) {
-        int count = 0;
-        int sum = 0;
-        solve(nums, 0, target, count, sum);
-        return count;
+        int ans = Recursion(nums, 0, target);
+        return ans;
     }
 };
