@@ -37,6 +37,9 @@ public:
         while(j < rightLength){
             nums[track++] = rightarr[j++];
         }
+
+        delete []leftarr;
+        delete []rightarr;
     }
     void mergeSort(vector<int>&nums, int st, int end){
         // base case
