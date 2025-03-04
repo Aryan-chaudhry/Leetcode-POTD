@@ -17,12 +17,12 @@ public:
                 }
             }
         }
-        return maxi; // Return maxi, squaring should be done in maximalSquare
+        return maxi * maxi; // Return maxi, squaring should be done in maximalSquare
     }
 
     int maximalSquare(vector<vector<char>>& matrix) {
         int maxi = 0;
         int ans = solve(matrix, maxi);
-        return ans * ans; // Fixed, squaring should be done here
+        return ans; // Fixed, squaring should be done here
     }
 };
