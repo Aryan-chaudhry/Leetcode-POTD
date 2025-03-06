@@ -11,42 +11,42 @@
  */
 class Solution {
 public:
+
+    vector <vector<int>> graph;
+    vector <bool> vis;
     int res = 0;
-    int infected(TreeNode* root, int start, int &dist){
-        if(root == NULL)
-        return 0;
+    void go(TreeNode* root){
+        if(!root) return;
 
-
-        int ldist = -1,rdist = -1;
-
-        int lh = infected(root->left, start, ldist);
-        int rh = infected(root->right, start, rdist);
-
-        if(root->val == start)
-        {
-            int temp = max(lh,rh);
-            res = max(res,temp);
-            dist = 0; return 1;
+        int val = root->val;
+        TreeNode* leftNode = root->left;
+        TreeNode* rightNode = root->right;
+        if(leftNode){
+            int l = leftNode->val;
+            graph[val].push_back(l);
+            graph[l].push_back(val);
         }
-
-        if(ldist != -1){
-            dist = lh;
-            res = max(res, dist+rh);
-            return lh+1;
+        if(rightNode){
+            int r = rightNode->val;
+            graph[val].push_back(r);
+            graph[r].push_back(val);
         }
-        else if(rdist != -1){
-            dist = rh;
-            res =max(res, dist+lh);
-            return rh+1;
+        go(leftNode);
+        go(rightNode);
+    }
+    void dfs(int node, int w){
+        vis[node] = true;
+        res = max(res, w);
+        for(auto child: graph[node]){
+            if(!vis[child]) 
+                dfs(child, w + 1);
         }
-
-        return max(lh,rh)+1;
     }
     int amountOfTime(TreeNode* root, int start) {
-        int dist = 0;
-        int ans = infected(root, start, dist);
-
+        graph.resize(1e5 + 7);
+        vis.resize(1e5 + 7);
+        go(root);
+        dfs(start, 0);
         return res;
-        
     }
 };
