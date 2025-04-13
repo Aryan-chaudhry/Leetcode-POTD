@@ -8,19 +8,34 @@
  */
 class Solution {
 public:
-    ListNode *detectCycle(ListNode *head) {
-        if(!head) return nullptr;
+    ListNode* hasCycle(ListNode*&head){
+        ListNode*fast = head;
+        ListNode*slow = head;
 
-        unordered_map<ListNode*, bool>mp;
-        ListNode*temp = head;
+        while(fast != NULL){
+            fast = fast -> next;
+            if(fast != NULL){
+                fast = fast -> next;
+                slow = slow -> next;
 
-        while(temp != NULL){
-            if(mp[temp] == true){
-                return temp;
+                if(fast == slow){
+                    return fast;
+                }
             }
-            mp[temp] = true;
-            temp = temp -> next;
         }
-    return nullptr;
-    } 
+        return nullptr;
+    }
+
+    ListNode *detectCycle(ListNode *head) {
+        ListNode*fast = hasCycle(head);
+        if(!fast) return nullptr;
+        
+        ListNode*slow = head;
+
+        while(slow != fast){
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        return slow;
+    }
 };
