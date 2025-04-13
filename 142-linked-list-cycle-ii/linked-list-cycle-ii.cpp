@@ -31,10 +31,16 @@ public:
         if(!fast) return nullptr;
         
         ListNode*slow = head;
+        ListNode*prev = fast; 
+
 
         while(slow != fast){
             slow = slow -> next;
+            prev = fast;
             fast = fast -> next;
+        }
+        if(prev -> next != nullptr){
+            prev -> next = nullptr;
         }
         return slow;
     }
