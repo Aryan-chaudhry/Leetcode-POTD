@@ -9,6 +9,12 @@ public:
         return true;
     }
 
+    void reverse(int st, int end, vector<int>&nums){
+        while(st <= end){
+            swap(nums[st++], nums[end--]);
+        }
+    }
+
     bool check(vector<int>& nums) {
         int position = -1;
 
@@ -21,19 +27,17 @@ public:
 
         if(position == -1) return true;
 
-        vector<int>ans;
+        reverse(position+1, nums.size()-1, nums);
+        reverse(0, position, nums);
+        reverse(0, nums.size()-1, nums);
 
-        for(int i=position+1; i<nums.size(); i++){
-            ans.push_back(nums[i]);
-        }
 
-        for(int i=0; i <= position; i++){
-            ans.push_back(nums[i]);
-        }
 
-        if(isSorted(ans)){
+        if(isSorted(nums)){
             return true;
         }
         return false;
     }
+    // TIME COMPLEXITY  O(n)
+    // SPACE COMPLEXITY O(1)
 };
