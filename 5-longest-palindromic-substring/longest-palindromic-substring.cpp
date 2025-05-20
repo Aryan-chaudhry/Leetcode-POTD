@@ -1,30 +1,28 @@
 class Solution {
 public:
-    bool isPalindrome(string &s, int st, int end){
-        while(st <= end){
-            if(s[st] != s[end]){
-                return false;
-            }
-            st++;
-            end--;
+    int expandAroundCentre(string s, int st, int end){
+        
+        while(st >= 0 && end < s.length() && s[st] == s[end]){
+            st--;
+            end++;
         }
-        return true;
+        return end-st-1;
     }
 
     string longestPalindrome(string s) {
-        int longest = 0;
-        int index = -1;
+        if(s.empty()) return "";
+        int st = 0, end = 0;
 
         for(int i=0; i<s.length(); i++){
-            for(int j=i; j<s.length(); j++){
-                if(isPalindrome(s,i,j)){
-                    if(j-i+1 > longest){
-                        longest = j-i+1;
-                        index = i;
-                    }
-                }
+            int len1 = expandAroundCentre(s,i,i); // find all palindrom sybstring of odd length
+            int len2 = expandAroundCentre(s,i,i+1); // of even 
+            int maxLen = max(len1,len2);
+
+            if(maxLen > end - st){
+                st = i-(maxLen-1)/2;
+                end = i+(maxLen)/2;
             }
         }
-        return s.substr(index, longest);
+        return s.substr(st,end-st+1);
     }
 };
