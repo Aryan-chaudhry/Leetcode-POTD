@@ -1,25 +1,22 @@
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        unordered_map<char,int>mp;
+        vector<int>store(256, 0);
 
-        for(auto ch : s){
-            mp[ch]++;
+        for(int i=0; i<s.size(); i++){
+            store[int(s[i])]++;       
         }
 
-        for(auto ch : t){
-            mp[ch]--;
+        for(int i=0; i<t.size(); i++){
+            store[int(t[i])]--;
         }
 
-        for(auto i : mp){
-            cout << i.first << " " << i.second << endl;
-        }
-
-        for(auto i : mp){
-            if(i.second != 0){
+        for(int i=0; i<store.size(); i++){
+            if(store[i] != 0){
                 return false;
             }
         }
+        
         return true;
     }
 };
