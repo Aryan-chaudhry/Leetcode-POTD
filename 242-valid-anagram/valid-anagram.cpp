@@ -1,9 +1,25 @@
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        sort(s.begin(), s.end());
-        sort(t.begin(), t.end());
-        
-        return s == t ?  true : false;
+        unordered_map<char,int>mp;
+
+        for(auto ch : s){
+            mp[ch]++;
+        }
+
+        for(auto ch : t){
+            mp[ch]--;
+        }
+
+        for(auto i : mp){
+            cout << i.first << " " << i.second << endl;
+        }
+
+        for(auto i : mp){
+            if(i.second != 0){
+                return false;
+            }
+        }
+        return true;
     }
 };
