@@ -10,17 +10,27 @@
  */
 class Solution {
 public:
-    ListNode* middleNode(ListNode* head) {
-        ListNode*fast = head;
-        ListNode*slow = head;
+    int getLength(ListNode* &head){
+        ListNode*temp = head;
+        int length = 0;
 
-        while(fast != NULL){
-            fast = fast -> next;
-            if(fast != NULL){
-                fast = fast -> next;
-                slow = slow -> next;
-            }
+        while(temp != 0){
+            length++;
+            temp = temp -> next;
         }
-        return slow;
+        return length;
+    }
+
+    ListNode* middleNode(ListNode* head) {
+        int length = getLength(head);
+        int position = length/2 + 1;
+        int track = 1;
+        ListNode*temp = head;
+
+        while(track != position){
+            temp = temp -> next;
+            track++;
+        }
+        return temp;
     }
 };
