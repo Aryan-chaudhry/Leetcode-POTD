@@ -5,29 +5,24 @@ public:
         if(amount == 0) return 0;
         if(dp[amount] != -1) return dp[amount];
 
-        int minAns = INT_MAX;
-        // amount banane ke leye har coin ko use karke dekh rha hu jis jis se ban sakta hai use banakar dekhta hu
+        int minCoin = INT_MAX;
 
         for(int i=0; i<coins.size(); i++){
-            int coin = coins[i];
-            if(coin <= amount){
-                // es coin se amount ban sakta hai
-                int ans = solve(coins, amount-coin, dp);
+            if(coins[i] <= amount){
+                int ans = solve(coins, amount-coins[i],dp);
 
                 if(ans != INT_MAX){
                     int coinUsed = 1 + ans;
-                   minAns = min(minAns, coinUsed);
+                    minCoin = min(minCoin, coinUsed);
                 }
-                
-            }
+            }            
         }
-        return dp[amount] = minAns;
+        return dp[amount] = minCoin;
     }
-
     int coinChange(vector<int>& coins, int amount) {
         if(amount == 0) return 0;
-        vector<int>dp(amount+1, -1);
-        int ans =  solve(coins, amount, dp);
-        return ans == INT_MAX || ans == 0 ? -1 : ans;
+        vector<int>dp(amount+1,-1);
+        int ans = solve(coins, amount, dp);
+        return ans == INT_MAX ? -1 : ans;
     }
 };
