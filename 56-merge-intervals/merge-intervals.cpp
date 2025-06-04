@@ -2,27 +2,23 @@ class Solution {
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
         sort(intervals.begin(), intervals.end());
-        vector<vector<int>>output;
 
-        for(int i=0; i<intervals.size(); i++){
-            if(output.empty()){
-                output.push_back(intervals[i]);
+        vector<vector<int>>ans;
+
+        for(auto temp : intervals){
+            if(ans.empty()){
+                ans.push_back(temp);
             }
             else{
-                vector<int>&track = output.back();
-                int previous = track[1];
-
-                int curr = intervals[i][0];
-
-                if(curr <= previous){
-                    
-                    track[1] = max(previous, intervals[i][1]);
+                vector<int>&check = ans.back();
+                if(check[1] >= temp[0]){
+                    check[1] = max(check[1], temp[1]);
                 }
                 else{
-                    output.push_back(intervals[i]);
+                    ans.push_back(temp);
                 }
             }
         }
-        return output;
+        return ans;
     }
 };
