@@ -10,29 +10,32 @@ public:
             if(nums[mid] == target){
                 return true;
             }
-            // handle duplicate
-            if(nums[st] == nums[mid] && nums[mid] == nums[end]){
+
+            else if(nums[st] == nums[mid] && nums[mid] == nums[end]){
                 st++;
                 end--;
                 continue;
             }
-            // first half is sorted
+
             else if(nums[st] <= nums[mid]){
-                // cheecl target is here
+                // left  half is sorted;
                 if(target >= nums[st] && target <= nums[mid]){
-                    // present
-                    // neglect second hlf
+                    // target present
                     end = mid - 1;
                 }
                 else{
+                    // left haft is softed but target not present
                     st = mid + 1;
                 }
             }
             else{
+                // right part is sorted;
                 if(target >= nums[mid] && target <= nums[end]){
+                    // target present in right half
                     st = mid + 1;
                 }
                 else{
+                    // right half is sorted but target not present
                     end = mid - 1;
                 }
             }
