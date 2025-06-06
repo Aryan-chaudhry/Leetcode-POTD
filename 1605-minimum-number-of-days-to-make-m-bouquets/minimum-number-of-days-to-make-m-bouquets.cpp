@@ -1,25 +1,26 @@
 class Solution {
 public:
-    bool isPossible(vector<int>&bloomDay, int day, int m, int k){
-        int count = 0;
-        int no_of_b = 0;
+    bool isPossible(vector<int>&bloomDay, int day, int m , int k){
+        int trackK = 0;
+        int no_of_bucket = 0;
+
         for(int i=0; i<bloomDay.size(); i++){
             if(bloomDay[i] <= day){
-                count++;
+                trackK++;
             }
             else{
-              no_of_b += (count/k);  
-              count = 0;
+               no_of_bucket += (trackK/k);
+               trackK = 0;
             }
         }
-        no_of_b += (count/k);
-        return no_of_b >= m;
+        no_of_bucket += (trackK/k);
+        return no_of_bucket >= m;
     }
 
     int minDays(vector<int>& bloomDay, int m, int k) {
+        int st = *min_element(bloomDay.begin(), bloomDay.end());
+        int end = *max_element(bloomDay.begin(), bloomDay.end());
         int ans = -1;
-        int st = *(min_element(bloomDay.begin(), bloomDay.end()));
-        int end = *(max_element(bloomDay.begin(), bloomDay.end()));
 
         while(st <= end){
             int mid = st + (end - st)/2;
@@ -31,9 +32,7 @@ public:
             else{
                 st = mid + 1;
             }
-            mid = st + (end - st)/2;
         }
-
         return ans;
     }
 };
