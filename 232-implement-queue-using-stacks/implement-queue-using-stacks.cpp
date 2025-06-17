@@ -22,12 +22,9 @@ public:
     }
     
     int pop() {
-        if(!s1.empty()){
-            int front = s1.top();
-            s1.pop();
-            return front;
-        }
-        return -1;
+        int front = s1.top();
+        s1.pop();
+        return front;
     }
     
     int peek() {
@@ -38,7 +35,7 @@ public:
     }
     
     bool empty() {
-        return s1.empty() && s2.empty();
+        return s1.empty();
     }
 };
 
