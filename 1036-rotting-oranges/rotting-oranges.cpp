@@ -1,55 +1,71 @@
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
-        int rows = grid.size(), cols = grid[0].size();
-        queue<pair<int,int>>q; // because of i,j th index orange
-        int freshOranges = 0;
+        int rowsize = grid.size();
+        int colsize = grid[0].size();
 
-        // step 1  all the rotten oranges to the queue
+        vector<vector<bool>>visited(rowsize, vector<bool>(colsize, false));
+        int timer = 0;
+        int minTimeToRot = 0;
+        // make a queue
+        queue<pair<pair<int,int>,int>>q; // --> {ri, ci}, time
 
-        for(int i=0; i<rows; i++){
-            for(int j=0; j<cols; j++){
-                if(grid[i][j] == 2) q.push({i,j}); 
-                else if(grid[i][j] == 1) freshOranges++;
+        // i can traverse in 4 direction
+        int dr[] = {-1, 0, 1, 0};
+        int dc[] = {0, 1, 0, -1};
+
+        // maintain initail state
+        // insert all rotten oranges in queue first
+
+        for(int i=0; i<rowsize; i++){
+            for(int j=0; j<colsize; j++){
+                // rotten oranges --> 2
+                if(!visited[i][j] && grid[i][j] ==  2){
+                    q.push({{i,j},timer});
+                    visited[i][j] = true;
+                }
             }
         }
-
-        if(!freshOranges) return 0;
 
         // main logic
-        int minutes = 0;
-        vector<pair<int,int>>directions = {{0,1}, {1,0}, {0,-1}, {-1,0}};
 
-        // perform bfs
         while(!q.empty()){
-            int size = q.size(); // rotten oranges --> level 1
-            bool hasRottenNew = false;
+            auto frontNode = q.front();
+            q.pop();
 
-            // processing current level / T / min
-            for(int i=0; i<size; i++){
-                auto curr = q.front();
-                q.pop();
+            int ri = frontNode.first.first;
+            int ci = frontNode.first.second;
+            int time = frontNode.second;
 
-                for(auto dir : directions){
-                    int newRow = curr.first + dir.first;
-                    int newCol = curr.second + dir.second;
-                    // check out of bounds
+            minTimeToRot = max(minTimeToRot, time);
 
-                    // if adjCell is a fresh Orange , so rot it
-                    if(newRow >=0 && newRow < rows
-                     && newCol >=0 && newCol < cols
-                     && grid[newRow][newCol] == 1){
-                        grid[newRow][newCol] = 2;
-                        freshOranges--;
-                        q.push({newRow, newCol}); // for next level
-                        hasRottenNew = true;
-                     }
-                }           
+            // ab jo oranges freh hai unhe sadao
+            for(int i=0; i<4; i++){
+                int nri = ri + dr[i];
+                int nci = ci + dc[i];
+
+                if(nri >= 0 && nri < rowsize && nci >= 0 && nci < colsize &&
+                !visited[nri][nci] && grid[nri][nci] == 1){
+                    q.push({{nri, nci},time+1});
+                    visited[nri][nci] = true;
+                    // mark it that is get roast --> to track that how many fresh oranges are left
+                    grid[nri][nci] = 2;
+                }
             }
-            if(hasRottenNew) minutes++;  
         }
-    // step 3 checking
-    if(freshOranges > 0) return -1;
-    return minutes;
+
+        // check how many fresh oranges are left
+        int freshOrange = 0;
+
+        for(int i=0; i<rowsize; i++){
+            for(int j=0; j<colsize; j++){
+                if(grid[i][j] == 1){
+                    // fresh present
+                    freshOrange++;
+                }
+            }
+        }
+
+        return freshOrange == 0 ? minTimeToRot : -1; 
     }
 };
