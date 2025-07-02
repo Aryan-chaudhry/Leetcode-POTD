@@ -1,47 +1,60 @@
 class Solution {
 public:
-    void bfs(int r, int c, vector<vector<char>>&grid, vector<vector<bool>>&visited){
-        int m = grid.size();
-        int n = grid[0].size();
-
+    void bfs(vector<vector<char>>&grid, int r, int c, vector<vector<bool>>&visited){
+        int rowSize = grid.size();
+        int colSize = grid[0].size();
+        
         queue<pair<int,int>>q;
+        // lets maintain the direction
+
+        int drow[4] = {-1, 0, 1, 0 };
+        int dcol[4] = {0, 1, 0, -1};
+        
+        // maintain initail state
         q.push({r,c});
         visited[r][c] = true;
 
-        int drow[] = {-1, 0, 1, 0};
-        int dcol[] = {0, 1, 0, -1};
-
+        // main logic
         while(!q.empty()){
-            int row = q.front().first;
-            int col = q.front().second;
+            auto frontNode = q.front();
             q.pop();
 
-            for(int i=0; i<4; i++){
-                int newr = row + drow[i];
-                int newc = col + dcol[i];
+            int rindex = frontNode.first;
+            int cindex = frontNode.second;
 
-                if(newr >=0 && newr < m && newc >= 0 && newc < n && !visited[newr][newc] && grid[newr][newc] == '1'){
-                    q.push({newr,newc});
+            for(int i=0; i<4; i++){
+                int newr = rindex + drow[i];
+                int newc = cindex + dcol[i];
+
+                // if it is valid to move here just move
+                if(newr >= 0 && newr < rowSize && newc >=0 
+                   && newc < colSize && grid[newr][newc] == '1' && !visited[newr][newc]){
+                    q.push({newr, newc});
                     visited[newr][newc] = true;
                 }
             }
         }
+        
     }
-
     int numIslands(vector<vector<char>>& grid) {
-        int m = grid.size();
-        int n = grid[0].size();
-        vector<vector<bool>>visited(m, vector<bool>(n, false));
-        int count = 0;
+        // count the number of disconnected components
+        int noOfIslands = 0;
+        
+        int totalRow = grid.size();
+        int totalCol = grid[0].size();
 
-        for(int i=0; i<m; i++){
-            for(int j=0; j<n; j++){
-                if(!visited[i][j] && grid[i][j] == '1'){
-                    bfs(i,j, grid, visited);
-                    count++;
+        // making visited vector
+        vector<vector<bool>>visited(totalRow, vector<bool>(totalCol));
+
+        for(int i=0; i<totalRow; i++){
+            for(int j=0; j<totalCol; j++){
+                if(grid[i][j] == '1' && visited[i][j] == false){
+                    int src = grid[i][j];
+                    bfs(grid, i, j, visited);
+                    noOfIslands++;
                 }
             }
         }
-        return count;
+        return noOfIslands;
     }
 };
