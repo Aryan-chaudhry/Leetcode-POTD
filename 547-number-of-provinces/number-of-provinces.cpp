@@ -1,22 +1,33 @@
 class Solution {
 public:
-    void dfs(vector<vector<int>>& isConnected, int src, vector<int>&visited){
+    void bfs(int src, unordered_map<int,bool>&visited, vector<vector<int>>&isConnected){
+        queue<int>q;
+
+        // maintain initail state
+        q.push(src);
         visited[src] = true;
 
-        for(int j=0; j<isConnected.size(); j++){
-            if(isConnected[src][j] == 1 && !visited[j]){
-                dfs(isConnected, j, visited);
+        // main logic
+        while(!q.empty()){
+            int frontNode = q.front();
+            q.pop();
+
+            for(int j=0; j<isConnected[frontNode].size(); j++){
+                if(!visited[j] && isConnected[frontNode][j] == 1){
+                    q.push(j);
+                    visited[j] = true;
+                }
             }
         }
     }
-
     int findCircleNum(vector<vector<int>>& isConnected) {
+        // count the no of disconnected components
         int count = 0;
-        vector<int>visited(isConnected.size(), false);
 
+        unordered_map<int,bool>visited;
         for(int src=0; src<isConnected.size(); src++){
             if(!visited[src]){
-                dfs(isConnected, src, visited);
+                bfs(src, visited, isConnected);
                 count++;
             }
         }
