@@ -1,45 +1,51 @@
-// leetcode 1631. Path With Minimum Effort
-
 class Solution {
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
-        priority_queue< pair<int,pair<int,int> >, vector<pair<int,pair<int,int> >>, greater<pair<int,pair<int,int> >>  > pq; //min heap
-        int row = heights.size();
-        int col = heights[0].size();
-        vector<vector<int> > dist(row, vector<int>(col, INT_MAX));
-        //initial state maintain
-        pq.push({0,{0,0}});
+        priority_queue< pair<int, pair<int,int>>, vector<pair<int, pair<int,int>>>, greater<pair<int, pair<int,int>>>>pq;
+        
+        // calculating row and col size
+        int rowsize = heights.size();
+        int colsize = heights[0].size();
+
+        vector<vector<int>>dist(rowsize, vector<int>(colsize, 1e9));
+
+        // i can go in 4 direction
+        int dr[] = {-1, 0, 1, 0};
+        int dc[] = {0, 1, 0, -1};
+
+        // maintian initail state
+        pq.push({0, {0,0}});
         dist[0][0] = 0;
-        //dijkstra's logic 
-        while(!pq.empty()) {
-            pair<int,pair<int,int> > frontNode = pq.top();
+
+        // main logic
+        while(!pq.empty()){
+            auto frontNode = pq.top();
             pq.pop();
-            int currAbsDifference = frontNode.first;
-            int x = frontNode.second.first;
-            int y = frontNode.second.second;
-            //check for destination
-            if(x == row-1 && y == col-1) {
-                return dist[x][y];
-            }
-            else {
-                //then do up, down, left, right movement 
-                int dx[] = {0,-1,0,1};
-                int dy[] = {-1,0,1,0};
-                for(int i=0; i<4; i++) {
-                    int newX = x + dx[i];
-                    int newY = y + dy[i];
-                    // check if new coordinates are safe for movement
-                    if(newX >=0 && newY >= 0 && newX < row && newY < col) {
-                        int newAbsDifference = abs(heights[x][y] - heights[newX][newY]);
-                        // we want to store maximum abs difference
-                        int newMaxDifference = max(currAbsDifference, newAbsDifference);
-                        // we want to store minimum effort/distance
-                        if(newMaxDifference < dist[newX][newY]) {
-                            dist[newX][newY] = newMaxDifference;
-                            // jab bhi koi new MaxDifference calculate krenge tab pq me bhi push krna hai 
-                            pq.push({newMaxDifference,{newX,newY}});
-                        }
-                    }
+
+            int currabsDiff = frontNode.first;
+            int r = frontNode.second.first;
+            int c = frontNode.second.second;
+
+            // check karlo kya me destination pe pouch gaya
+            if(r == rowsize-1 && c == colsize-1) return dist[r][c];
+
+            // me kha kha ja sakta hu
+            for(int i=0; i<4; i++){
+                int newr = r + dr[i];
+                int newc = c + dc[i];
+
+                // check out of bound situation to nahi hai
+                if(newr >= 0 && newr < rowsize && newc >=0 && newc < colsize){
+                    // i am safe to go 
+                    // now find curr dist
+                    int newabsDiff = abs(heights[r][c]-heights[newr][newc]);
+                    // find the max abs diff
+                    int maxabsDiff = max(currabsDiff, newabsDiff);
+                    // ab dist ko update karvao
+                    if(maxabsDiff < dist[newr][newc]){
+                        dist[newr][newc] = maxabsDiff;
+                        pq.push({maxabsDiff, {newr,newc}});
+                    } 
                 }
             }
         }
