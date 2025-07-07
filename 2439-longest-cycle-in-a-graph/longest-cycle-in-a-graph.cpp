@@ -1,45 +1,40 @@
-// leetcode 2360. Longest Cycle in a Graph
-
-class Solution{
+class Solution {
 public:
-    void dfs(int node, vector<int> &edges, vector<bool> &visited, vector<bool> &dfsTracker, vector<int> &dist, int currLength, int &longestCycleLength){
-        if (node == -1) return;
-        visited[node] = true;
-        dfsTracker[node] = true;
-        dist[node] = currLength;
+    void solve(int src, int parent, unordered_map<int,list<int>>&adj, unordered_map<int,bool>&visited, unordered_map<int,bool>&dfsTracker, unordered_map<int,int>&lengthTracker, int &longestCycle, int distance){
+        visited[src] = true;
+        dfsTracker[src] = true;
+        lengthTracker[src] = distance;
 
-        int nextNode = edges[node];
-
-        if (nextNode != -1){
-            if(!visited[nextNode]){
-                dfs(nextNode, edges, visited, dfsTracker, dist, currLength + 1, longestCycleLength);
+        for(auto nbr : adj[src]){
+            if(!visited[nbr]){
+                solve(nbr, src, adj, visited, dfsTracker, lengthTracker, longestCycle, distance+1);
             }
-            else if(dfsTracker[nextNode]){
-                // cycle is there.
-                int cycleLength = currLength - dist[nextNode] + 1;
-                longestCycleLength = max(longestCycleLength, cycleLength);
+            else if(visited[nbr] && dfsTracker[nbr]){
+                longestCycle = max(longestCycle, lengthTracker[src]-lengthTracker[nbr]+1);
             }
         }
-        dfsTracker[node] = false;
+        dfsTracker[src] = false;
     }
 
-    int longestCycle(vector<int> &edges){
-        int n = edges.size();
-        vector<bool> visited(n, 0);
-        vector<bool> dfsTracker(n, 0);
-        vector<int> dist(n, 0); // we will record distances
-        int longestCycleLength = -1;
+    int longestCycle(vector<int>& edges) {
+        unordered_map<int,list<int>>adj;
 
-        for (int i = 0; i < n; i++){
-            if(!visited[i]){
-                dfs(i, edges, visited, dfsTracker, dist, 0, longestCycleLength);
+        for(int i=0; i<edges.size(); i++){
+            adj[i].push_back(edges[i]);
+        }
+
+        unordered_map<int,bool>visited;
+        unordered_map<int,bool>dfsTracker;
+        unordered_map<int,int>lengthTracker;
+        int longestCycle = -1;
+        int parent = -1;
+        int distance = 1;
+
+        for(int src=0; src<edges.size(); src++){
+            if(!visited[src]){
+                solve(src, parent, adj, visited, dfsTracker, lengthTracker, longestCycle, distance);
             }
         }
-        return longestCycleLength;
+        return longestCycle;
     }
 };
-
-
-
-
-
