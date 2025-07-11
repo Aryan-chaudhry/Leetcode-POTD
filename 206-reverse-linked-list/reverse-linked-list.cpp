@@ -10,18 +10,24 @@
  */
 class Solution {
 public:
+    ListNode* solve(ListNode*&prev, ListNode*&curr){
+        // base case
+        if(!curr) return prev;
+
+        // ek case me solve karunga
+        ListNode*frwd = curr -> next;
+        curr -> next = prev;
+        prev = curr;
+        curr = frwd;
+
+        return solve(prev, curr);
+    }
     ListNode* reverseList(ListNode* head) {
         if(!head) return 0;
-
         ListNode*prev = 0;
         ListNode*curr = head;
 
-        while(curr != 0){
-            ListNode*frwd = curr -> next;
-            curr -> next = prev;
-            prev = curr;
-            curr = frwd;
-        }
-        return prev;
+        ListNode*ans = solve(prev,curr);
+        return ans;
     }
 };
