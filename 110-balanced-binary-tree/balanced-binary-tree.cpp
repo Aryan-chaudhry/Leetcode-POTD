@@ -11,33 +11,24 @@
  */
 class Solution {
 public:
-    int getHeight(TreeNode*root){
+    int getHeight(TreeNode* root){
         if(!root) return 0;
 
-        int left = getHeight(root -> left);
-        int right = getHeight(root -> right);
-        int maxHeight = 1 + max(left,right);
-        return maxHeight;
-        
+        int leftHeight = getHeight(root -> left);
+        int rightHeight = getHeight(root -> right);
+        return 1 + max(leftHeight, rightHeight);
     }
     bool isBalanced(TreeNode* root) {
-        // har ek node pe jakar uski height nikal lo agar height ka diff > 1 aaya to 
-        // balance nahi hai
         if(!root) return true;
-        
 
+        bool opt1 = isBalanced(root -> left);
+        bool opt2 = isBalanced(root -> right);
         int leftHeight = getHeight(root -> left);
         int rightHeight = getHeight(root -> right);
         int absDiff = abs(leftHeight-rightHeight);
         bool status = absDiff <= 1 ? true : false;
 
-        int leftBalanced = isBalanced(root -> left);
-        int rightBalanced = isBalanced(root -> right);
-
-        if(status && leftBalanced && rightBalanced) return true;
+        if(opt1 && opt2 && status) return true;
         return false;
-
-
-        
     }
 };
